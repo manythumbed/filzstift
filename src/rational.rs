@@ -69,6 +69,12 @@ impl Sub<Rational, Rational> for Rational	{
 	}
 }
 
+impl Mul<Rational, Rational> for Rational	{
+	fn mul(&self, other: &Rational) -> Rational	{
+		Rational::new(self.num *  other.num, self.den * other.den)
+	}
+}
+
 #[cfg(test)]
 mod test {
 	use super::Rational;
@@ -105,5 +111,12 @@ mod test {
 		let x = Rational::new(1, 2) - Rational::new(1, 2);
 		assert_eq!(x.num, 0);
 		assert_eq!(x.den, 1);
+	}
+
+	#[test]
+	fn check_mul()	{
+		let x = Rational::new(1, 2) * Rational::new(1, 2);
+		assert_eq!(x.num, 1);
+		assert_eq!(x.den, 4);
 	}
 }
