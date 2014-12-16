@@ -38,6 +38,10 @@ impl Rational	{
 		Rational{num: a, den: b}
 	}
 
+	pub fn from_i32(val: i32)	-> Rational	{
+		Rational::new(val, 1)
+	}
+
 	pub fn num(&self) -> i32 {
 		self.num
 	}
@@ -54,24 +58,29 @@ impl Rational	{
 	}
 }
 
-impl Copy for Rational	{
-}
+impl Copy for Rational	{}
 
 impl Add<Rational, Rational> for Rational {
-	fn add(&self, other: &Rational) -> Rational {
+	fn add(self, other: Rational) -> Rational {
 		Rational::new(self.num * other.den + other.num * self.den, self.den * other.den)
 	}
 }
 
 impl Sub<Rational, Rational> for Rational	{
-	fn sub(&self, other: &Rational) -> Rational	{
+	fn sub(self, other: Rational) -> Rational	{
 		Rational::new(self.num * other.den - other.num * self.den, self.den * other.den)
 	}
 }
 
 impl Mul<Rational, Rational> for Rational	{
-	fn mul(&self, other: &Rational) -> Rational	{
+	fn mul(self, other: Rational) -> Rational	{
 		Rational::new(self.num *  other.num, self.den * other.den)
+	}
+}
+
+impl Neg<Rational> for Rational	{
+	fn neg(&self) -> Rational	{
+		*self * Rational::from_i32(-1)
 	}
 }
 
@@ -118,5 +127,12 @@ mod test {
 		let x = Rational::new(1, 2) * Rational::new(1, 2);
 		assert_eq!(x.num, 1);
 		assert_eq!(x.den, 4);
+	}
+
+	#[test]
+	fn check_neg()	{
+		let x = - Rational::new(1, -2);
+		assert_eq!(x.num, 1);
+		assert_eq!(x.den, 2);
 	}
 }
