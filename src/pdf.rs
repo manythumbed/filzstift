@@ -5,7 +5,7 @@ fn eol(w: &mut Writer) -> IoResult<()>	{
 }
 
 fn header(w: &mut Writer) ->IoResult<()>	{
-	try!(w.write_str("%PDF–1. 7"));
+	try!(w.write_str("%PDF-1.7"));
 	try!(eol(w));	
 	Ok(())
 }
@@ -28,6 +28,6 @@ mod test {
 	fn check_header()	{
 		let mut out = Vec::<u8>::new();
 		header(&mut out).unwrap();
-		assert_eq!(out, vec!(b'%', b'P', b'D', b'F'));
+		assert_eq!(out, "%PDF-1.7\r\n".as_bytes());
 	}
 }
