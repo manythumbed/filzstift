@@ -79,8 +79,8 @@ impl Mul<Rational, Rational> for Rational	{
 }
 
 impl Neg<Rational> for Rational	{
-	fn neg(&self) -> Rational	{
-		*self * Rational::from_i32(-1)
+	fn neg(self) -> Rational	{
+		self * Rational::from_i32(-1)
 	}
 }
 
