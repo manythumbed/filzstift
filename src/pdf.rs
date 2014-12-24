@@ -1,27 +1,55 @@
 use std::io::IoResult;
 
-fn eol(w: &mut Writer) -> IoResult<()>	{
-	w.write_str("\r\n")
+struct IndexWriter<W>	{
+	inner: Option<W>
 }
 
-fn header(w: &mut Writer) ->IoResult<()>	{
+impl<W: Writer> IndexWriter<W>	{
+	fn new(w: W) -> IndexWriter<W> { 
+		IndexWriter { inner: Some(w) }
+	}
+}
+
+impl<W: Writer> Writer for IndexWriter<W>	{
+	fn write(&mut self, buf: &[u8]) -> IoResult<()> { 
+		self.inner.as_mut().unwrap().write(buf) 
+	}
+}
+
+fn eol(w: &mut Writer) -> IoResult<()>	{ w.write_str("\r\n") }
+
+fn header(w: &mut Writer) -> IoResult<()>	{
 	try!(w.write_str("%PDF-1.7"));
 	try!(eol(w));	
 	Ok(())
 }
 
+fn body(w: &mut Writer) -> IoResult<()>	{
+	let index = IndexWriter::new(w);
+	Ok(())
+}
+
 #[cfg(test)]
 mod test {
+	use super::IndexWriter;
 	use super::eol;
 	use super::header;
+
+	#[test]
+	fn check_index_writer()	{
+		let out = Vec::<u8>::new();
+		let mut w = IndexWriter::new(out);
+		w.write_str("test").unwrap();
+
+		assert_eq!(w.inner.unwrap(), "test".as_bytes());
+	}
 
 	#[test]
 	fn check_eol()	{
 		let mut out = Vec::<u8>::new();
 		eol(&mut out).unwrap();
 		assert_eq!(out.len(), 2);
-		assert_eq!(out[0], b'\r');
-		assert_eq!(out[1], b'\n');
+		assert_eq!(out, "\r\n".as_bytes());
 	}
 
 	#[test]
