@@ -1,17 +1,19 @@
 use std::io::IoResult;
 
 struct IndexWriter<W>	{
-	inner: Option<W>
+	inner: Option<W>,
+	pos: uint
 }
 
 impl<W: Writer> IndexWriter<W>	{
 	fn new(w: W) -> IndexWriter<W> { 
-		IndexWriter { inner: Some(w) }
+		IndexWriter { inner: Some(w), pos: 0 }
 	}
 }
 
 impl<W: Writer> Writer for IndexWriter<W>	{
 	fn write(&mut self, buf: &[u8]) -> IoResult<()> { 
+		self.pos += buf.len();
 		self.inner.as_mut().unwrap().write(buf) 
 	}
 }
@@ -42,6 +44,7 @@ mod test {
 		w.write_str("test").unwrap();
 
 		assert_eq!(w.inner.unwrap(), "test".as_bytes());
+		assert_eq!(w.pos, "test".as_bytes().len());
 	}
 
 	#[test]
