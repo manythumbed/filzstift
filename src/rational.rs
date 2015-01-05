@@ -1,6 +1,7 @@
 use std::num::SignedInt;
+use std::ops::{Add, Mul, Neg, Sub};
 
-#[deriving(Show)]
+#[derive(Show)]
 pub struct Rational {
 	num: i32,
 	den: i32
@@ -60,25 +61,33 @@ impl Rational	{
 
 impl Copy for Rational	{}
 
-impl Add<Rational, Rational> for Rational {
+impl Add for Rational {
+	type Output = Rational;
+
 	fn add(self, other: Rational) -> Rational {
 		Rational::new(self.num * other.den + other.num * self.den, self.den * other.den)
 	}
 }
 
-impl Sub<Rational, Rational> for Rational	{
+impl Sub for Rational	{
+	type Output = Rational;
+
 	fn sub(self, other: Rational) -> Rational	{
 		Rational::new(self.num * other.den - other.num * self.den, self.den * other.den)
 	}
 }
 
-impl Mul<Rational, Rational> for Rational	{
+impl Mul for Rational	{
+	type Output = Rational;
+
 	fn mul(self, other: Rational) -> Rational	{
 		Rational::new(self.num *  other.num, self.den * other.den)
 	}
 }
 
-impl Neg<Rational> for Rational	{
+impl Neg for Rational	{
+	type Output = Rational;
+
 	fn neg(self) -> Rational	{
 		self * Rational::from_i32(-1)
 	}
