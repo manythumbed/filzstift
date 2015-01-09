@@ -2,7 +2,7 @@ use std::io::IoResult;
 
 struct IndexWriter<W>	{
 	inner: Option<W>,
-	pos: uint
+	pos: u32
 }
 
 impl<W: Writer> IndexWriter<W>	{
@@ -13,7 +13,7 @@ impl<W: Writer> IndexWriter<W>	{
 
 impl<W: Writer> Writer for IndexWriter<W>	{
 	fn write(&mut self, buf: &[u8]) -> IoResult<()> { 
-		self.pos += buf.len();
+		self.pos += buf.len() as u32;
 		self.inner.as_mut().unwrap().write(buf) 
 	}
 }
@@ -44,7 +44,7 @@ mod test {
 		w.write_str("test").unwrap();
 
 		assert_eq!(w.inner.unwrap(), "test".as_bytes());
-		assert_eq!(w.pos, "test".as_bytes().len());
+		assert_eq!(w.pos, "test".as_bytes().len() as u32);
 	}
 
 	#[test]
